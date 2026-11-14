@@ -33,7 +33,7 @@ export class CreateUsers1794460148924 implements MigrationInterface {
                     {
                         name: "role",
                         type: "enum",
-                        enum: ["USER", "ADMIN"],
+                        enum: ['USER', 'ADMIN'],
                         default: "'USER'",
                     },
                     {
