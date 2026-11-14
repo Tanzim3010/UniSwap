@@ -5,6 +5,8 @@ import { BullModule } from '@nestjs/bull';
 import { PostgresDatabaseProviderModule } from '@/providers/database/postgres/provider.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { CategoriesModule } from '@/modules/categories/categories.module';
+import { ListingsModule } from '@/modules/listings/listings.module';
 import { AppController } from '@/src/app.controller';
 import { AppService } from '@/src/app.service';
 import global_config from '@/config/global_config';
@@ -29,6 +31,8 @@ import global_config from '@/config/global_config';
 
     UsersModule,
     AuthModule,
+    CategoriesModule,
+    ListingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
