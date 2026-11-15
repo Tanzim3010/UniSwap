@@ -401,3 +401,6 @@ package-lock.json
 dist
 .webpack
 .serverless/**/*.zip
+
+postman/categories.postman_collection.json
+postman/listings.postman_collection.json
