@@ -41,6 +41,16 @@ export class UsersService {
     }
   }
 
+  async saveUser(user: User): Promise<User> {
+    try {
+      return await this.userRepository.save(user);
+    }
+    catch (error) {
+      console.error('Error saving user:', error);
+      throw error;
+    }
+  }
+
   async findByEmail(
     email: string,
     includePassword = false,

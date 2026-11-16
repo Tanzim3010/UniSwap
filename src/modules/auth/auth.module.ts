@@ -7,9 +7,15 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './auth.strategy';
 
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmailVerification } from './entities/email-verification.entity';
+import { MailModule } from '@/src/mails/mail.module';
+
 @Module({
   imports: [
+    TypeOrmModule.forFeature([EmailVerification]),
     UsersModule,
+    MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_BEARER_SECRET,

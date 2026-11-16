@@ -5,6 +5,7 @@ import { Post, Body } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { HttpCode, HttpStatus } from '@nestjs/common';
 import { ValidationPipe } from '@/common/pipes/validation.pipe';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 
 @Controller('auth')
 export class AuthController{
@@ -13,6 +14,11 @@ export class AuthController{
     @Post('register')
     register(@Body(new ValidationPipe()) dto: RegisterDto){
         return this.authService.register(dto);
+    }
+
+    @Post('verify-email')
+    verifyEmail(@Body(new ValidationPipe()) dto: VerifyEmailDto){
+        return this.authService.verifyEmail(dto.token);
     }
 
     @Post('login')
