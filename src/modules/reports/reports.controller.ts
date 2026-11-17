@@ -24,6 +24,17 @@ import { ResolveReportDto } from './dto/resolve-report.dto';
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
+  @Post('reports')
+  createReport(
+    @CurrentUser() reporter: AuthUser,
+    @Body() createReportDto: CreateReportDto,
+  ) {
+    return this.reportsService.createReport(
+      reporter.id,
+      createReportDto,
+    );
+  }
+
   @Post('listings/:listingId/reports')
   createListingReport(
     @Param('listingId', ParseUUIDPipe) listingId: string,

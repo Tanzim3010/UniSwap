@@ -23,6 +23,34 @@ export class ReportsService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async createReport(
+    reporterId: string,
+    createReportDto: CreateReportDto,
+  ): Promise<Report> {
+    const listingId = createReportDto.listingId ?? undefined;
+    const reportedUserId = createReportDto.reportedUserId ?? undefined;
+
+    if (listingId !== undefined && reportedUserId === undefined) {
+      return this.createListingReport(
+        listingId,
+        reporterId,
+        createReportDto,
+      );
+    }
+
+    if (reportedUserId !== undefined && listingId === undefined) {
+      return this.createUserReport(
+        reportedUserId,
+        reporterId,
+        createReportDto,
+      );
+    }
+
+    throw new BadRequestException(
+      'Exactly one of listingId or reportedUserId must be provided',
+    );
+  }
+
   async createListingReport(
     listingId: string,
     reporterId: string,
