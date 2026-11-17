@@ -1,6 +1,6 @@
-import{ Column, CreateDateColumn, Entity, PrimaryGeneratedColumn }from"typeorm"
-import{User} from "../../users/entities/user.entity";
-import{Listing} from "../../listings/entites/listing.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../users/entities/user.entity";
+import { Listing } from "../../listings/entites/listing.entity";
 export enum ReportStatus {
     PENDING = "pending",
     REVIEWED = "reviewed",
@@ -38,5 +38,33 @@ export class Report {
     })
     created_at!: Date;
 
-    
+    @ManyToOne(() => User, (user) => user.reports, {
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "reporter_id" })
+    reporter: User;
+
+  
+    @ManyToOne(() => Listing, (listing) => listing.reports, {
+        nullable: true,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "listing_id" })
+    listing: Listing;
+
+  
+    @ManyToOne(() => User, (user) => user.received_reports, {
+        nullable: true,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "reported_user_id" })
+    reported_user: User;
+
+  
+    @ManyToOne(() => User, (user) => user.reviewed_reports, {
+        nullable: true,
+        onDelete: "SET NULL",
+    })
+    @JoinColumn({ name: "reviewed_by" })
+    reviewer: User;
 }
