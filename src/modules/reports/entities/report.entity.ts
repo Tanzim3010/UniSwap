@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
-import { Listing } from "../../listings/entites/listing.entity";
+import { Listing } from "../../listings/entities/listing.entity";
 export enum ReportStatus {
     PENDING = "pending",
     REVIEWED = "reviewed",
@@ -16,7 +16,7 @@ export class Report {
     reason!:string;
 
     @Column({ name: "description", type: "text", nullable: true })
-    description!: string;
+    description!: string | null;
 
     @Column({
         name:"status",
@@ -26,8 +26,8 @@ export class Report {
     })
     status!:ReportStatus;
 
-        @Column({ name: "moderation_note", type: "text", nullable: true })
-    moderation_note!: string;
+    @Column({ name: "moderation_note", type: "text", nullable: true })
+    moderation_note!: string | null;
 
     @Column({ name: "reviewed_at", type: "timestamptz", nullable: true })
     reviewed_at!: Date | null;
@@ -42,7 +42,7 @@ export class Report {
         onDelete: "CASCADE",
     })
     @JoinColumn({ name: "reporter_id" })
-    reporter: User;
+    reporter!: User;
 
   
     @ManyToOne(() => Listing, (listing) => listing.reports, {
@@ -50,7 +50,7 @@ export class Report {
         onDelete: "CASCADE",
     })
     @JoinColumn({ name: "listing_id" })
-    listing: Listing;
+    listing!: Listing | null;
 
   
     @ManyToOne(() => User, (user) => user.received_reports, {
@@ -58,7 +58,7 @@ export class Report {
         onDelete: "CASCADE",
     })
     @JoinColumn({ name: "reported_user_id" })
-    reported_user: User;
+    reported_user!: User | null;
 
   
     @ManyToOne(() => User, (user) => user.reviewed_reports, {
@@ -66,5 +66,5 @@ export class Report {
         onDelete: "SET NULL",
     })
     @JoinColumn({ name: "reviewed_by" })
-    reviewer: User;
+    reviewer!: User | null;
 }

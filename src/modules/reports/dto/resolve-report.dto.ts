@@ -1,16 +1,15 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
-
-export enum ReportStatus {
-  REVIEWED = "reviewed",
-  RESOLVED = "resolved",
-  DISMISSED = "dismissed",
-}
+import { IsIn, IsOptional, IsString } from "class-validator";
+import { ReportStatus } from "../entities/report.entity";
 
 export class ResolveReportDto {
-  @IsEnum(ReportStatus)
+  @IsIn([
+    ReportStatus.REVIEWED,
+    ReportStatus.RESOLVED,
+    ReportStatus.REJECTED,
+  ])
   status!: ReportStatus;
 
   @IsOptional()
   @IsString()
-  moderation_note?:string;
+  moderation_note?: string;
 }

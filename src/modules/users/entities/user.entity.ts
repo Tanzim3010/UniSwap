@@ -3,11 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '@/common/enums/role.enum';
 import { UserStatus } from '@/common/enums/user-status.enum';
+import { Report } from '@/modules/reports/entities/report.entity';
 
 @Entity('users')
 export class User {
@@ -38,4 +40,13 @@ export class User {
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
     updatedAt!: Date;
+
+    @OneToMany(() => Report, (report) => report.reporter)
+    reports!: Report[];
+
+    @OneToMany(() => Report, (report) => report.reported_user)
+    received_reports!: Report[];
+
+    @OneToMany(() => Report, (report) => report.reviewer)
+    reviewed_reports!: Report[];
 }

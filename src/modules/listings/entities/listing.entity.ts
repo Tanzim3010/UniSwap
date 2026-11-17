@@ -6,12 +6,14 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { User } from "@/modules/users/entities/user.entity";
 import { Category } from "@/modules/categories/entities/category.entity";
+import { Report } from "@/modules/reports/entities/report.entity";
 
 export enum ListingCondition {
   NEW = "NEW",
@@ -75,4 +77,7 @@ export class Listing {
 
   @DeleteDateColumn({ name: "deleted_at", type: "timestamptz", nullable: true })
   deletedAt!: Date | null;
+
+  @OneToMany(() => Report, (report) => report.listing)
+  reports!: Report[];
 }
