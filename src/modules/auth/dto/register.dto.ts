@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 
 export class RegisterDto {
-    @Transform(({ value }) => value.trim().toLowerCase())
+    @Transform(({ value }) => typeof value === 'string' ? value.trim().toLowerCase() : value)
     @IsEmail()
     @Matches(/^\d{2}-\d{5}-\d@student\.aiub\.edu$/i, {
     message: 'Email must be a valid AIUB student email',

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": true,
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "types": ["jest", "node"]
+  },
+  "include": ["src/**/*.spec.ts"]
+}

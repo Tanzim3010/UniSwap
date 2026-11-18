@@ -8,10 +8,7 @@ import { UserStatus } from './common/enums/user-status.enum';
 import { User } from './modules/users/entities/user.entity';
 
 async function seedAdmin() {
-  const dataSource = new DataSource({
-    ...dataSourceOptions,
-    entities: [User],
-  });
+  const dataSource = new DataSource(dataSourceOptions);
 
   await dataSource.initialize();
 
