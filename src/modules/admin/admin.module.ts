@@ -18,4 +18,4 @@ import { Listing } from "../listings/entities/listing.entity";
     exports:[AdminService],
 })
 
-export class AdminMOdule{}
+export class AdminModule{}

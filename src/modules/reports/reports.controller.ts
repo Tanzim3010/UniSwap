@@ -68,6 +68,13 @@ export class ReportsController {
     return this.reportsService.getAllReports();
   }
 
+  @Get('admin/reports/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  getReportById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.reportsService.getReportById(id);
+  }
+
   @Patch('admin/reports/:id/resolve')
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)

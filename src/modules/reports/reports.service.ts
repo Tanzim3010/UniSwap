@@ -127,6 +127,24 @@ export class ReportsService {
     });
   }
 
+  async getReportById(id: string): Promise<Report> {
+    const report = await this.reportRepository.findOne({
+      where: { id },
+      relations: {
+        reporter: true,
+        listing: true,
+        reported_user: true,
+        reviewer: true,
+      },
+    });
+
+    if (!report) {
+      throw new NotFoundException(`Report ${id} not found`);
+    }
+
+    return report;
+  }
+
   async resolveReport(
     id: string,
     reviewerId: string,

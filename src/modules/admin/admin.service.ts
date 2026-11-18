@@ -16,6 +16,45 @@ export class AdminService{
     
 
     ) {}
+
+        getAllUsers() {
+            return this.userRepository.find({
+                select: {
+                    id: true,
+                    email: true,
+                    displayName: true,
+                    role: true,
+                    status: true,
+                    isVerified: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+                order: { createdAt: "DESC" },
+            });
+        }
+
+        async getUserById(id: string) {
+            const user = await this.userRepository.findOne({
+                where: { id },
+                select: {
+                    id: true,
+                    email: true,
+                    displayName: true,
+                    role: true,
+                    status: true,
+                    isVerified: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            });
+
+            if (!user) {
+                throw new NotFoundException("User not found");
+            }
+
+            return user;
+        }
+
             async suspendUser (id:string){
             const user = await this.userRepository.findOne({
                 where:{id},
