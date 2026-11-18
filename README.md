@@ -1,133 +1,100 @@
-# Krown Dex Backend – Setup & Run Guide
+# UniSwap:A campus marketplace 
 
-````bash
-
-This guide will help you set up and run the NestJS backend project locally.
-
-## 🚀 Prerequisites
-Before starting, ensure the following are installed:
-- Node.js v22 or later
-- PostgreSQL
-- Redis
-- npm, yarn, or pnpm (any package manager)
-- Docker (optional, for containerized setup)
+> **Course:** Advanced Programming in Web Technology  
+> **Institution:** American International University-Bangladesh (AIUB)  
+> **Semester:** Fall 2026–2027 · Section E · Group 07  
+> **Instructor:** Sultanul Arifeen Hamim, Lecturer, Department of Computer Science  
 
 ---
 
-## 📦 Install Dependencies
-Use any of the following commands:
+## 📌 Project Overview
 
-```bash
+**UniSwap** is a backend REST API for a campus marketplace website. It allows university students to buy or sale their academic materials, browse available items and complete transactions. The system also provides authentication, email verification and admin control. 
+
+The project has four main objectives: 
+
+- Provide CRUD operations for users, product listings, categories, offers and transactions. 
+
+- Secure the API using JWT auth, password hashing, validation and role based authorization. 
+
+- Support a reliable marketplace for students to buy and sale materials safely. 
+
+- Maintain data integrity using relational database constraints, migrations and transactions where multiple tables are updated  together. 
+
+- The project mainly focuses on the backend. Swagger Ui and Postman are used to test the API. Online payment processing, delivery   tracking and real time chat are outside the current scope. 
+
+---
+
+## 👥 Team Members & Contribution
+
+- MD Tanzimul Islam (23-53147-3). **Contribution:** Auth, Email verification, Users module
+- Tamanna Billah (23-53176-3). **Contribution:** Admin, Reports, Analytics
+- Adnan Akib (23-53177-3). **Contribution** Categories, Listings
+- Avishek Saha (23-54508-3 ). **Contribution** Transactions, offers
+---
+
+
+## ⚙️ Local Setup & Installation
+
+### Prerequisites
+- Node.js 22.x
+- pnpm (`npm install -g pnpm`)
+- PostgreSQL 13 or later (running on port `5432`)
+
+### Step 1: Clone & Install Dependencies
+```powershell
+git clone https://github.com/Tanzim3010/UniSwap
+cd UniSwap
 pnpm install
-# or
-yarn install
-# or
-npm install
-
-
-````
-
-# 🔧 Environment Variables
-
-Go to the project root directory
-Find the file .env.example
-Create a .env file in the same directory
-Copy all content from .env.example into .env
-Update values based on your local environment
-Example:
-
-```bash
-cp .env.example .env
+pnpm add class-validator class-transformer
 ```
 
-# 🗄️ Database Setup & Migrations
+### Step 2: Configure Environment Variables
+Copy the example environment configuration:
+```powershell
+Copy-Item .env.example .env
+```
+Ensure your `.env` contains valid credentials for your local PostgreSQL:
+```env
+PORT=5001
+NODE_ENV=development
+JWT_BEARER_SECRET="your-secure-random-secret"
 
-Create the database
-
-```bash
-create db krown_dex_db
-
+DB_CLIENT="postgres"
+DB_HOST="localhost"
+DB_PORT="5432"
+DB_USER="postgres"
+DB_PASSWORD="your_password"
+DB_DATABASE="UniSwap"
 ```
 
-Run migrations
-
-```bash
+### Step 3: Run Database Migrations
+Create the database `UniSwap` in PostgreSQL, then run:
+```powershell
 pnpm run migration:run
-# or
-yarn migration:run
-# or
-npm run migration:run
-
 ```
 
-# ⚡ Redis Setup
+### Step 4: Add Admin user
 
-Option 1: Run Redis with Docker
+Make sure you have these filled up in your `.env`
 
-```bash
-docker run -d --name krown-redis -p 6379:6379 redis:7-alpine
+#Admin Configuration
+ADMIN_EMAIL=                  
+ADMIN_PASSWORD=                  
+ 
+```powershell
+pnpm seeder:run:dev
 ```
 
-Option 2: Native install- Start Redis manually, then ensure .env values match:
-
-```bash
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=
-
+### Step 4: Start the Development Server
+```powershell
+pnpm run start:dev
 ```
 
-# ▶️ Running the Backend (Development)
+---
 
-Start the NestJS app:
 
-```bash
-pnpm start:dev
-# or
-yarn start:dev
-# or
-npm run start:dev
+## 📜 License & Academic Integrity
 
-```
-
-# 🏗️ Production Build
-
-Create a production build:
-
-```bash
-pnpm build
-# or
-yarn build
-# or
-npm run build
-
-```
-
-Start the production server:
-
-```bash
-pnpm start:prod
-# or
-yarn start:prod
-# or
-npm run start:prod
-
-```
-
-# 📁 Project Structure (Overview)
-
-```bash
-/project-root
-  ├─ src/
-  │   ├─ modules/
-  │   ├─ common/
-  │   ├─ config/
-  │   ├─ main.ts
-  │   └─ app.module.ts
-  ├─ migrations/
-  ├─ test/
-  ├─ .env.example
-  ├─ package.json
-  └─ tsconfig.json
-
-```
+This project is submitted in partial fulfillment of the requirements for the **Advanced Programming in Web Technology (CSC4161)** course at **American International University-Bangladesh (AIUB)**.  
+Licensed under the [MIT License](LICENSE).
