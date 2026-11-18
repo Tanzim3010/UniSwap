@@ -404,3 +404,4 @@ dist
 
 postman/categories.postman_collection.json
 postman/listings.postman_collection.json
+src/modules/offers/postman-main.ts

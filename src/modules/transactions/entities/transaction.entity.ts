@@ -1,72 +1,80 @@
 import {
-    Column,
-    Check,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    OneToOne,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+  Check,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
+import { Listing } from "@/modules/listings/entities/listing.entity";
 import { Offer } from "@/modules/offers/entities/offer.entity";
 import { User } from "@/modules/users/entities/user.entity";
 
 export enum TransactionStatus {
-    RESERVED = "reserved",
+  RESERVED = "reserved",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
 }
 
 @Entity("transactions")
 @Index("uq_transactions_one_reserved_per_listing", ["listingId"], {
-    unique: true,
-    where: `"status" = 'reserved'`,
+  unique: true,
+  where: `"status" = 'reserved'`,
 })
 @Check("ck_transactions_buyer_not_seller", `"buyer_id" <> "seller_id"`)
 export class Transaction {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
-    @Column({ name: "listing_id", type: "uuid" })
-    listingId!: string;
+  @Column({ name: "listing_id", type: "uuid" })
+  listingId!: string;
 
-    @Column({ name: "offer_id", type: "uuid" })
-    offerId!: string;
+  @ManyToOne(() => Listing, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "listing_id" })
+  listing!: Listing;
 
-    @OneToOne(() => Offer, { nullable: false, onDelete: "RESTRICT" })
-    @JoinColumn({ name: "offer_id", referencedColumnName: "id" })
-    offer!: Offer;
+  @Column({ name: "offer_id", type: "uuid" })
+  offerId!: string;
 
-    @Column({ name: "buyer_id", type: "uuid" })
-    buyerId!: string;
+  @OneToOne(() => Offer, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "offer_id" })
+  offer!: Offer;
 
-    @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
-    @JoinColumn({ name: "buyer_id", referencedColumnName: "id" })
-    buyer!: User;
+  @Column({ name: "buyer_id", type: "uuid" })
+  buyerId!: string;
 
-    @Column({ name: "seller_id", type: "uuid" })
-    sellerId!: string;
+  @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "buyer_id" })
+  buyer!: User;
 
-    @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
-    @JoinColumn({ name: "seller_id", referencedColumnName: "id" })
-    seller!: User;
-    @Column({
-        type: "enum",
-        enum: TransactionStatus,
-        enumName: "transaction_status",
-        default: TransactionStatus.RESERVED,
-    })
-    status!: TransactionStatus;
+  @Column({ name: "seller_id", type: "uuid" })
+  sellerId!: string;
 
-    @Column({ name: "completed_at", type: "timestamptz", nullable: true })
-    completedAt!: Date | null;
+  @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "seller_id" })
+  seller!: User;
 
-    @Column({ name: "cancelled_at", type: "timestamptz", nullable: true })
-    cancelledAt!: Date | null;
+  @Column({
+    type: "enum",
+    enum: TransactionStatus,
+    enumName: "transaction_status",
+    default: TransactionStatus.RESERVED,
+  })
+  status!: TransactionStatus;
 
-    @CreateDateColumn({ name: "created_at", type: "timestamptz" })
-    createdAt!: Date;
+  @Column({ name: "completed_at", type: "timestamptz", nullable: true })
+  completedAt!: Date | null;
 
-    @UpdateDateColumn({ name: "updated_at", type: "timestamptz" })
-    updatedAt!: Date;
+  @Column({ name: "cancelled_at", type: "timestamptz", nullable: true })
+  cancelledAt!: Date | null;
+
+  @CreateDateColumn({ name: "created_at", type: "timestamptz" })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: "updated_at", type: "timestamptz" })
+  updatedAt!: Date;
 }
