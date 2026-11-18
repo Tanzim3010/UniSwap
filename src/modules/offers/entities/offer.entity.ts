@@ -1,61 +1,68 @@
 import {
-    Column,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
+import { Listing } from "@/modules/listings/entities/listing.entity";
 import { User } from "@/modules/users/entities/user.entity";
 
 export enum OfferStatus {
-    PENDING = "pending",
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  REJECTED = "rejected",
 }
 
 @Entity("offers")
 @Index("uq_offers_one_pending_per_buyer_listing", ["listingId", "buyerId"], {
-    unique: true,
-    where: `"status" = 'pending'`,
+  unique: true,
+  where: `"status" = 'pending'`,
 })
 export class Offer {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
-    @Column({ name: "listing_id", type: "uuid" })
-    listingId!: string;
+  @Column({ name: "listing_id", type: "uuid" })
+  listingId!: string;
 
-    @Column({ name: "buyer_id", type: "uuid" })
-    buyerId!: string;
+  @ManyToOne(() => Listing, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "listing_id" })
+  listing!: Listing;
 
-    @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
-    @JoinColumn({ name: "buyer_id", referencedColumnName: "id" })
-    buyer!: User;
+  @Column({ name: "buyer_id", type: "uuid" })
+  buyerId!: string;
 
-    @Column({
-        name: "offered_price",
-        type: "numeric",
-        precision: 10,
-        scale: 2,
-        nullable: true,
-    })
-    offeredPrice!: string | null;
+  @ManyToOne(() => User, { nullable: false, onDelete: "RESTRICT" })
+  @JoinColumn({ name: "buyer_id" })
+  buyer!: User;
 
-    @Column({ type: "text", nullable: true })
-    message!: string | null;
+  @Column({
+    name: "offered_price",
+    type: "numeric",
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  offeredPrice!: string | null;
 
-    @Column({
-        type: "enum",
-        enum: OfferStatus,
-        enumName: "offer_status",
-        default: OfferStatus.PENDING,
-    })
-    status!: OfferStatus;
+  @Column({ type: "text", nullable: true })
+  message!: string | null;
 
-    @CreateDateColumn({ name: "created_at", type: "timestamptz" })
-    createdAt!: Date;
+  @Column({
+    type: "enum",
+    enum: OfferStatus,
+    enumName: "offer_status",
+    default: OfferStatus.PENDING,
+  })
+  status!: OfferStatus;
 
-    @UpdateDateColumn({ name: "updated_at", type: "timestamptz" })
-    updatedAt!: Date;
+  @CreateDateColumn({ name: "created_at", type: "timestamptz" })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: "updated_at", type: "timestamptz" })
+  updatedAt!: Date;
 }

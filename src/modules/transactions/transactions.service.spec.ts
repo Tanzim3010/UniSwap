@@ -1,46 +1,45 @@
-/// <reference types="node" />
+import { describe, expect, it, jest } from "@jest/globals";
 import { NotFoundException } from "@nestjs/common";
-import assert from "node:assert/strict";
-import { test } from "node:test";
-import { FindOneOptions, Repository } from "typeorm";
+import { DataSource, FindOneOptions, Repository } from "typeorm";
 import { Transaction } from "./entities/transaction.entity";
 import { TransactionsService } from "./transactions.service";
 
-test("filters by transaction ID and buyer or seller ID", async () => {
+describe("TransactionsService", () => {
+  const dataSource = {} as DataSource;
+
+  it("filters by transaction ID and buyer or seller ID", async () => {
     const transaction = Object.assign(new Transaction(), { id: "tx-1" });
+    const findOne = jest.fn(async (options: FindOneOptions<Transaction>) => {
+      expect(options.where).toEqual([
+        { id: "tx-1", buyerId: "user-1" },
+        { id: "tx-1", sellerId: "user-1" },
+      ]);
+      return transaction;
+    });
+    const repository = { findOne };
+
+    const service = new TransactionsService(
+      repository as unknown as Repository<Transaction>,
+      dataSource,
+    );
+
+    await expect(service.getTransactionById("tx-1", "user-1")).resolves.toBe(
+      transaction,
+    );
+  });
+
+  it("returns 404 when no transaction matches the user", async () => {
     const repository = {
-        async findOne(options: FindOneOptions<Transaction>) {
-            assert.deepEqual(options.where, [
-                { id: "tx-1", buyerId: "user-1" },
-                { id: "tx-1", sellerId: "user-1" },
-            ]);
-            return transaction;
-        },
+      findOne: jest.fn().mockResolvedValue(null),
     };
 
     const service = new TransactionsService(
-        repository as unknown as Repository<Transaction>
+      repository as unknown as Repository<Transaction>,
+      dataSource,
     );
 
-    assert.equal(
-        await service.getTransactionById("tx-1", "user-1"),
-        transaction,
-    );
-});
-
-test("returns 404 when no transaction matches the user", async () => {
-    const repository = {
-        async findOne() {
-            return null;
-        },
-    };
-
-    const service = new TransactionsService(
-        repository as unknown as Repository<Transaction>
-    );
-
-    await assert.rejects(
-        () => service.getTransactionById("tx-1", "user-2"),
-        NotFoundException,
-    );
+    await expect(
+      service.getTransactionById("tx-1", "user-2"),
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
 });
