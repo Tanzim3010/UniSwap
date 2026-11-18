@@ -7,6 +7,9 @@ import { UsersModule } from '@/modules/users/users.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ListingsModule } from '@/modules/listings/listings.module';
+import { ReportsModule } from '@/modules/reports/reports.module';
+import { AdminModule } from '@/modules/admin/admin.module';
+import { AnalyticsModule } from '@/modules/analytics/analytics.module';
 import { AppController } from '@/src/app.controller';
 import { AppService } from '@/src/app.service';
 import global_config from '@/config/global_config';
@@ -33,6 +36,9 @@ import global_config from '@/config/global_config';
     AuthModule,
     CategoriesModule,
     ListingsModule,
+    ReportsModule,
+    AdminModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

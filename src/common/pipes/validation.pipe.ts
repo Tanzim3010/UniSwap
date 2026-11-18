@@ -22,7 +22,13 @@ export class ValidationPipe implements PipeTransform<any> {
     const object = plainToInstance(metatype, value);
     const errors = await validate(object, this.options);
     if (errors.length > 0) {
-      throw new BadRequestException("Bad Request Payload");
+      throw new BadRequestException({
+        message: "Bad Request Payload",
+        details: errors.map(({ property, constraints }) => ({
+          property,
+          messages: Object.values(constraints ?? {}),
+        })),
+      });
     }
     return object;
   }
